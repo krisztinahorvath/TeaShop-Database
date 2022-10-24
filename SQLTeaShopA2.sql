@@ -78,7 +78,12 @@ insert into AllergTeas(
 	(9, 4),
 	(10, 4)
 
-
+--integrity constraint, no tea with tid=11
+--insert into AllergTeas(
+--	tid,
+--	alid
+--) values
+--	(11,2)
 
 insert into Clients(
 	name, 
@@ -155,3 +160,44 @@ insert into TeaOrders(
 	(5, 6, 27.6, 3, '2019-01-01'),
 	(2, 7, 9.3, 1,'2020-07-28'),
 	(9, 6, 12.5,1, '2019-01-01')
+
+
+
+--update data – for at least 3 tables;
+
+
+--increases the salary with 100 of all employees that have a salary >=4500
+update EmployeeDetails
+set salary=salary + 100
+where salary >= 4500
+select * from EmployeeDetails
+
+
+--decreases the price by 2 euros of all the teas that have at least 10 pieces and at most 15
+select * from Teas
+update Teas
+set price=price-2
+where quantity between 10 and 15
+select * from Teas
+
+--update TeaOrders
+--set price=20
+--where tid=10 and oid=5
+
+--gives a 10% discount for all orders placed in june and september of 2022.
+select * from TeaOrders
+update TeaOrders
+set  price=price - 0.1*price
+where  Month(orderingDate) in (6, 9)
+select * from TeaOrders
+
+
+
+--delete data – for at least 2 tables
+
+
+--delete all the orders placed by client with cid=4
+--USE CASCADE ON DELETE/UPDATE???
+
+
+
