@@ -1,4 +1,3 @@
-
 use TeaShop
 go
 
@@ -6,59 +5,57 @@ go
 --at least one statement must violate referential integrity constraints;
 
 insert into TeaTypes (
-	ttid, 
 	name
 ) values
-	(1, 'sleep'),
-	(2, 'energy'),
-	(3, 'focus'),
-	(4, 'meditation')
+	('sleep'),
+	('energy'),
+	('focus'),
+	('meditation')
 
 
 
 insert into Allergens(
-	alid,
 	name
 ) values
-	(1, 'Almonds'),
-	(2, 'Milk'),
-	(3, 'Soy Lecithin'),
-	(4, 'Coconut')
+	('Almonds'),
+	('Milk'),
+	('Soy Lecithin'),
+	('Coconut')
+
 
 
 
 insert into Distributors(
-	did,
 	name,
 	address
 ) values 
-	(1, 'Native American Herbal Tea Company', '102 4th Ave SE, Aberdeen, SD 57401, USA'),
-	(2, 'Hugo Tea Company', '1007 Swift Ave, Kansas City, MO 64116'),
-	(3, 'Cooper Tea Company', '408 S Pierce Ave, Louisville, CO 80027'),
-	(4, 'New Mexico Tea Company', '1131 Mountain Rd NW Ste 2, Albuquerque, NM 87102'),
-	(5, 'Phoenix Tea Company', '4243 W 3rd St # 9651, Battlefield, MO 65619'),
-	(6, 'International Company', '1006 Fatherland Street, STE 204, Nashville, TN 37206')
+	('Native American Herbal Tea Company', '102 4th Ave SE, Aberdeen, SD 57401, USA'),
+	('Hugo Tea Company', '1007 Swift Ave, Kansas City, MO 64116'),
+	('Cooper Tea Company', '408 S Pierce Ave, Louisville, CO 80027'),
+	('New Mexico Tea Company', '1131 Mountain Rd NW Ste 2, Albuquerque'),
+	('Phoenix Tea Company', '4243 W 3rd St # 9651, Battlefield'),
+	('International Company', 'Fatherland Street, Nashville, TN 37206')
 
 
 
 insert into Teas(
-	tid,
 	ttid,
 	name,
 	quantity,
 	price,
 	did
 )values
-	(1, 1, 'Evergreen', 4, 2.6, 1),
-	(2, 2, 'Grand Tisane', 3, 9.3, 2),
-	(3, 3, 'Toasted Almond', 2, 7, 1),
-	(4, 3, 'Johannesburg', 5, 6.5, 6),
-	(5, 4, 'Mama Bahama', 10, 9.2, 6),
-	(6, 2, 'Mango Flip', 13, 5.5, 4),
-	(7, 4, 'Coconut Vanilla', 4, 3.2,5),
-	(8, 2, 'Organic Rooi Coconut', 5, 7, 3),
-	(9, 2, 'Sencha Tropic', 1, 12.5, 6),
-	(10, 3, 'Red Jamaica', 2, 10, 4)
+	(1, 'Evergreen', 4, 2.6, 1),
+	(2, 'Grand Tisane', 3, 9.3, 2),
+	(3, 'Toasted Almond', 2, 7, 1),
+	(3, 'Johannesburg', 5, 6.5, 6),
+	(4, 'Mama Bahama', 10, 9.2, 6),
+	(2, 'Mango Flip', 13, 5.5, 4),
+	(4, 'Coconut Vanilla', 4, 3.2,5),
+	(2, 'Organic Rooi Coconut', 5, 7, 3),
+	(2, 'Sencha Tropic', 1, 12.5, 6),
+	(3, 'Red Jamaica', 2, 10, 4)
+
 
 
 
@@ -84,33 +81,31 @@ insert into AllergTeas(
 
 
 insert into Clients(
-	cid,
 	name, 
 	email,
 	address
 )values
-	(1, 'Sherlock Holmes', 'sherlock.holmes@email.com', '750 Bartoletti Burgs, Apt. 038, Great Britain'),
-	(2, 'Nicole Willis', 'nicole.willis@email.com', 'Larsplein 6, 2 hoog, Utrecht, Netherlands'),
-	(3, 'Jason Simon', 'jason.simon@email.com', '56 Schuster Plaza, Suite 269, New York, United States'),
-	(4, 'Melissa Bell', 'melissa.bell@email.com', '708 Casandra Mission, Apt. 800, Great Britain'),
-	(5, 'Anthony Glover', 'anthony.glover@email.com', '3341 Wolff Shoals, Suite 737, Great Britain'),
-	(6, 'Donna Gonzalez', 'donna.gonzalez@email.com', '3574 Hayes Common, Kansas, United States'),
-	(7, 'Barbara Brown', 'barbara.brown@email.com', '926 Kaden Mission, Apt. 921, Colorado, United States'),
-	(8, 'Dorothy Lee', 'dorothy.lee@email.com', '55182 Runolfsson Mission, Apt. 843, Utah, United States')
+	('Sherlock Holmes', 'sherlock.holmes@email.com', '750 Bartoletti Burgs, Apt. 038, Great Britain'),
+	('Nicole Willis', 'nicole.willis@email.com', 'Larsplein 6, 2 hoog, Utrecht, Netherlands'),
+	('Jason Simon', 'jason.simon@email.com', '56 Schuster Plaza, Suite 269, New York, United States'),
+	('Melissa Bell', 'melissa.bell@email.com', '708 Casandra Mission, Apt. 800, Great Britain'),
+	('Anthony Glover', 'anthony.glover@email.com', '3341 Wolff Shoals, Suite 737, Great Britain'),
+	('Donna Gonzalez', 'donna.gonzalez@email.com', '3574 Hayes Common, Kansas, United States'),
+	('Barbara Brown', 'barbara.brown@email.com', '926 Kaden Mission, Apt. 921, Colorado, United States'),
+	('Dorothy Lee', 'dorothy.lee@email.com', '55182 Runolfsson Mission, Apt. 843, Utah, United States')
 
 
 
 insert into Employees(
-	eid,
 	name,
 	jobTitle
 ) values
-	(1, 'Stephen Perry', 'manager'),
-	(2, 'Bernard Scott', 'cashier'),
-	(3, 'Chelsea Ashley', 'cleaning'),
-	(4, 'Erika Hamilton', 'cashier'),
-	(5, 'Thomas Hoffman', 'cashier'),
-	(6, 'Richard Morton', 'cashier')
+	('Stephen Perry', 'manager'),
+	('Bernard Scott', 'cashier'),
+	('Chelsea Ashley', 'cleaning'),
+	('Erika Hamilton', 'cashier'),
+	('Thomas Hoffman', 'cashier'),
+	('Richard Morton', 'cashier')
 
 
 
@@ -131,17 +126,16 @@ insert into EmployeeDetails(
 
 
 insert into Orders(
-	oid, 
 	eid,
 	cid
 ) values
-	(1, 2, 1),
-	(2, 4, 2),
-	(3, 4, 2),
-	(4, 5, 6),
-	(5, 6, 3), 
-	(6, 2, 7),
-	(7, 6, 5)
+	(2, 1),
+	(4, 2),
+	(4, 2),
+	(5, 6),
+	(6, 3), 
+	(2, 7),
+	(6, 5)
 
 
 
@@ -149,15 +143,15 @@ insert into TeaOrders(
 	tid,
 	oid,
 	price,
-	quantity
-	--orderingDate
+	quantity,
+	orderingDate
 ) values
-	(1, 1, 2.6, 1),
-	(3, 2, 18.6, 2),
-	(3, 3, 9.3, 1),
-	(6, 4, 11, 2),
-	(8, 4, 7, 1),
-	(10, 5, 20, 2),
-	(5, 6, 27.6, 3),
-	(2, 7, 9.3, 1),
-	(9, 6, 12.5,1)
+	(1, 1, 2.6, 1, '2022-02-14'),
+	(3, 2, 18.6, 2, '2022-04-17'),
+	(3, 3, 9.3, 1, '2022-04-17'),
+	(6, 4, 11, 2, '2022-06-19'),
+	(8, 4, 7, 1, '2022-06-19'),
+	(10, 5, 20, 2, '2022-09-15'),
+	(5, 6, 27.6, 3, '2019-01-01'),
+	(2, 7, 9.3, 1,'2020-07-28'),
+	(9, 6, 12.5,1, '2019-01-01')
