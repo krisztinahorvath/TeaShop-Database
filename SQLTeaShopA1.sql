@@ -17,8 +17,7 @@ create table Allergens(
 create table Distributors (
 	did int primary key identity,
 	name varchar(40) not null,
-	address varchar(40),
-	quantity int default 1
+	address varchar(40)
 )
 
 create table Teas (
