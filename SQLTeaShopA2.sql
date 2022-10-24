@@ -200,4 +200,9 @@ select * from TeaOrders
 --USE CASCADE ON DELETE/UPDATE???
 
 
+--delete all the orders placed by client with cid=4
+
+--delete the employees who don't have an adress or have an invalid email
+--(doesn't end with '@email.com') 
+
 
