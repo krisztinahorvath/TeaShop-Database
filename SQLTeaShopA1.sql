@@ -17,7 +17,7 @@ create table Allergens(
 create table Distributors (
 	did int primary key identity,
 	name varchar(40) not null,
-	address varchar(40)
+	address varchar(60)
 )
 
 create table Teas (
@@ -39,7 +39,7 @@ create table Clients (
 	cid int primary key identity,
 	name varchar(40) not null,
 	email varchar(40) not null,
-	address varchar(40) not null
+	address varchar(60) not null
 )
 
 create table Employees (
@@ -52,7 +52,7 @@ create table EmployeeDetails (
 	eid int foreign key references Employees(eid) not null,
 	email varchar(40) not null,
 	salary float not null,
-	address varchar(40),
+	address varchar(60),
 	hiringDate date not null,
 	constraint pk_EmployeeDetails primary key(eid)
 )
@@ -68,7 +68,8 @@ create table TeaOrders (
 	oid int foreign key references Orders(oid) not null,
 	constraint pk_TeaOrders primary key(oid, tid),
 	price float not null,  
-	quantity int default 1
+	quantity int default 1,
+	orderingDate date not null
 )
 
 
