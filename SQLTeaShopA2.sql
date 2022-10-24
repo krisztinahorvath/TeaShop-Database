@@ -126,7 +126,9 @@ insert into EmployeeDetails(
 	(3, 'chelsea.ashley@email.com', 2000, 'Wilderman Rest, Suite 010, California, United States', '2020-09-01'),
 	(4, 'erika.hamilton@email.com', 3500, '2134 Abel Orchard, Apt.21, Wisconsin, United States', '2018-12-21'),
 	(5, 'thomas.hoffman@email.com', 3400, '0248 Inlet, Suite 203, Montana, United States', '2019-12-16'),
-	(6, 'richard.morton@email.com', 4000, '5299 Pagac Port, Texas, United States', '2014-05-27')
+	(6, 'richard.morton@email.com', 4000, '5299 Pagac Port, Texas, United States', '2014-05-27'),
+	(7, 'ana.popescu@email.com', 3900 , null, '2022-10-24'),
+	(8, 'maria.andronescu@email.co', 4000, 'Wilderman Rest, Apt.21, Wisconsin, United States','2022-10-23')
 
 
 
@@ -187,7 +189,7 @@ select * from Teas
 --gives a 10% discount for all orders placed in june and september of 2022.
 select * from TeaOrders
 update TeaOrders
-set  price=price - 0.1*price
+set  price=price-0.1*price
 where  Month(orderingDate) in (6, 9)
 select * from TeaOrders
 
@@ -195,14 +197,22 @@ select * from TeaOrders
 
 --delete data – for at least 2 tables
 
-
---delete all the orders placed by client with cid=4
 --USE CASCADE ON DELETE/UPDATE???
 
+--delete all the orders that are 
 
---delete all the orders placed by client with cid=4
 
 --delete the employees who don't have an adress or have an invalid email
 --(doesn't end with '@email.com') 
+select * from Employees
+
+delete from EmployeeDetails
+where email not like '%email.com' or address is null
+
+select * from Employees, EmployeeDetails
+
+
+
+
 
 
