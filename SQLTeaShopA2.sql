@@ -20,7 +20,9 @@ insert into Allergens(
 	('Almonds'),
 	('Milk'),
 	('Soy Lecithin'),
-	('Coconut')
+	('Coconut'),
+	('Peanuts'),
+	('Gluten')
 
 
 
@@ -36,14 +38,15 @@ insert into Distributors(
 	('Phoenix Tea Company', '4243 W 3rd St # 9651, Battlefield'),
 	('International Company', 'Fatherland Street, Nashville, TN 37206')
 
-
+select * from Distributors
 
 insert into Teas(
 	ttid,
 	name,
 	quantity,
 	price,
-	did
+	did   -- here i can have error trying to insert on a did that doesn't exist
+
 )values
 	(1, 'Evergreen', 4, 2.6, 1),
 	(2, 'Grand Tisane', 3, 9.3, 2),
@@ -56,6 +59,16 @@ insert into Teas(
 	(2, 'Sencha Tropic', 1, 12.5, 6),
 	(3, 'Red Jamaica', 2, 10, 4)
 
+--ERROR
+insert into Teas(
+	ttid,
+	name,
+	quantity,
+	price,
+	did   -- here i can have error trying to insert on a did that doesn't exist
+
+)values
+	(1, 'Evergreen', 4, 2.6, 10)
 
 
 
@@ -78,12 +91,7 @@ insert into AllergTeas(
 	(9, 4),
 	(10, 4)
 
---integrity constraint, no tea with tid=11
---insert into AllergTeas(
---	tid,
---	alid
---) values
---	(11,2)
+
 
 insert into Clients(
 	name, 
@@ -110,9 +118,11 @@ insert into Employees(
 	('Chelsea Ashley', 'cleaning'),
 	('Erika Hamilton', 'cashier'),
 	('Thomas Hoffman', 'cashier'),
-	('Richard Morton', 'cashier')
+	('Richard Morton', 'cashier'),
+	('Ana Popescu', 'cashier'),
+	('Maria Andronescu', 'cashier')
 
-
+	
 
 insert into EmployeeDetails(
 	eid,
@@ -197,22 +207,93 @@ select * from TeaOrders
 
 --delete data – for at least 2 tables
 
---USE CASCADE ON DELETE/UPDATE???
+--delete all the orders that are older than a year and have the total greater than 10
+select * from TeaOrders
+delete from TeaOrders
+where (YEAR(orderingDate) < 2022 and MONTH(orderingDate) <= 10 and DAY(orderingDate) <= 24) and price > 10
+select * from TeaOrders
 
---delete all the orders that are 
 
 
 --delete the employees who don't have an adress or have an invalid email
 --(doesn't end with '@email.com') 
-select * from Employees
 
 delete from EmployeeDetails
 where email not like '%email.com' or address is null
 
-select * from Employees, EmployeeDetails
+select * from EmployeeDetails
+
+select * from Employees
 
 
 
+--a. 2 queries with the union operation; use UNION [ALL] and OR;
+
+--UNION
+--show all the emails of the clients and employees in the database to send them a happy holiday email
+select email
+from Clients
+union 
+select email
+from EmployeeDetails
+order by email
+
+--UNION ALL
+--show the employees that have packaged an order (in the future we can count all the distinct columns to see how many orders each employee had)
+select E.name, E.eid
+from Employees E
+union all
+select E.name , O.eid
+from Orders O, Employees E
+where O.eid=E.eid
+
+
+--b. 2 queries with the intersection operation; use INTERSECT and IN;
+
+--INTERSECT
+--show the allergens found in the teas that have more than one pieces but less than 5, or it has exactly 6
+select A.alid, A.name
+from Allergens A
+intersect
+select AlT.alid, A.name
+from AllergTeas AlT, Allergens A, Teas
+where AlT.tid = Teas.tid and AlT.alid=A.alid and ((Teas.quantity > 1 and Teas.quantity < 5) or Teas.quantity=6)
 
 
 
+--IN
+--show all the teas that have allergens peanuts, almonds, and milk
+select T.tid, T.name, A.name
+from Teas T, AllergTeas AlT, Allergens A
+where T.tid=AlT.tid and AlT.alid=A.alid and A.name in ('Peanuts', 'Almonds', 'Milk')
+
+
+
+--c. 2 queries with the difference operation; use EXCEPT and NOT IN;
+
+
+--EXCEPT
+--
+
+
+
+--NOT IN
+--
+
+
+--d. 4 queries with INNER JOIN, LEFT JOIN, RIGHT JOIN, and FULL JOIN (one query per operator); 
+-- one query will join at least 3 tables, while another one will join at least two many-to-many relationships;
+
+--e. 2 queries with the IN operator and a subquery in the WHERE clause; 
+--in at least one case, the subquery must include a subquery in its own WHERE clause;
+
+--f. 2 queries with the EXISTS operator and a subquery in the WHERE clause;
+
+--g. 2 queries with a subquery in the FROM clause;                         
+
+--h. 4 queries with the GROUP BY clause, 3 of which also contain the HAVING clause; 
+--2 of the latter will also have a subquery in the HAVING clause; 
+--use the aggregation operators: COUNT, SUM, AVG, MIN, MAX;
+
+--i. 4 queries using ANY and ALL to introduce a subquery in the WHERE clause (2 queries per operator); 
+--rewrite 2 of them with aggregation operators, and the other 2 with IN / [NOT] IN.
