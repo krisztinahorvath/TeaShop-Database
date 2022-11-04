@@ -271,18 +271,39 @@ where T.tid=AlT.tid and AlT.alid=A.alid and A.name in ('Peanuts', 'Almonds', 'Mi
 
 --c. 2 queries with the difference operation; use EXCEPT and NOT IN;
 
-
 --EXCEPT
---
+--find the clients that have a saved account but haven't ordered anything yet
+select C.cid, C.name
+from Clients C
+except
+select C.cid, C.name
+from Orders O, Clients C
+where O.cid=C.cid 
 
 
 
 --NOT IN
---
+--find the top 3 employees that haven't been hired in 2012, 2019, 2021 order them descending by their salary
+select top 3 t.eid, t.name, t.salary, t.hiringDate
+from 
+	(select E.eid, E.name, EmployeeDetails.hiringDate,EmployeeDetails.salary
+	from Employees E, EmployeeDetails
+	where E.eid=EmployeeDetails.eid and year(EmployeeDetails.hiringDate) not in (2012,2019,2021)
+	) t --ERROR if we use order by in the select in from
+order by t.salary desc
+
 
 
 --d. 4 queries with INNER JOIN, LEFT JOIN, RIGHT JOIN, and FULL JOIN (one query per operator); 
 -- one query will join at least 3 tables, while another one will join at least two many-to-many relationships;
+
+--INNER JOIN
+
+--LEFT JOIN
+
+--RIGHT JOIN
+
+--FULL JOIN
 
 --e. 2 queries with the IN operator and a subquery in the WHERE clause; 
 --in at least one case, the subquery must include a subquery in its own WHERE clause;
