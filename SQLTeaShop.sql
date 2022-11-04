@@ -1,4 +1,0 @@
---create database TeaShop
---go
-
-
