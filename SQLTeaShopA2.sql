@@ -298,12 +298,39 @@ order by t.salary desc
 -- one query will join at least 3 tables, while another one will join at least two many-to-many relationships;
 
 --INNER JOIN
+--show all the different teas that have been ordered and the clients that have ordered them
+--one query will join at least 3 tables
+select TeaOrders.oid, Teas.name, Clients.cid
+from Teas 
+inner join TeaOrders on TeaOrders.tid=Teas.tid
+inner join Orders on TeaOrders.oid=Orders.oid
+inner join Clients on Clients.cid=Orders.cid
+
 
 --LEFT JOIN
+--show all cashiers that have packed an order of a tea with the allergen milk
+--will join at least two many-to-many relationships;
+select Employees.name, Teas.name as tea_name, Orders.oid
+from Employees
+left join Orders on Orders.eid=Employees.eid
+left join TeaOrders on TeaOrders.oid=Orders.oid
+left join Teas on Teas.tid=TeaOrders.tid
+left join AllergTeas on AllergTeas.tid=Teas.tid
+left join Allergens on Allergens.alid=AllergTeas.alid
+where Employees.jobTitle='cashier' and Allergens.name='milk'
+
 
 --RIGHT JOIN
+--show all the different types that the teas in the current stock have and the maximum price of the teas that have it
+select distinct TeaTypes.name, Teas.price
+from TeaTypes
+right join Teas on Teas.ttid=TeaTypes.ttid
+where Teas.price=(select max(price) 
+					from Teas
+					where Teas.ttid=TeaTypes.ttid)
 
 --FULL JOIN
+--
 
 --e. 2 queries with the IN operator and a subquery in the WHERE clause; 
 --in at least one case, the subquery must include a subquery in its own WHERE clause;
