@@ -330,10 +330,48 @@ where Teas.price=(select max(price)
 					where Teas.ttid=TeaTypes.ttid)
 
 --FULL JOIN
---
+--show 3 clients with the most expensive orders and their price
+select top 3 Clients.name, TeaOrders.price 
+from Clients
+right join Orders on Clients.cid=Orders.cid
+right join TeaOrders on TeaOrders.oid=Orders.oid
+order by TeaOrders.price desc
+
 
 --e. 2 queries with the IN operator and a subquery in the WHERE clause; 
 --in at least one case, the subquery must include a subquery in its own WHERE clause;
+
+
+--IN operator and a subquery in the WHERE clause; 
+--show the employees that have been hired in 2019 and 2021(2020 no hiring-pandemic)
+--and have the maximum salary of that year
+select Employees.name, ED.salary, year(ED.hiringDate) as hiringYear
+from Employees
+full join EmployeeDetails ED on ED.eid=Employees.eid
+where year(ED.hiringDate) in (2019, 2021) and ED.salary = (select max(EmployeeDetails.salary)
+															from EmployeeDetails
+														    where year(EmployeeDetails.hiringDate)=year(ED.hiringDate))
+
+
+
+--IN operator and a subquery in the WHERE clause; 
+--in at least one case, the subquery must include a subquery in its own WHERE clause;
+--show all the employees that have packed for at least 2 clients and at least one of those clients ordered in 2022
+--and show their salary with a 10% raise because of that 
+select distinct Employees.eid,  Employees.name, ED.salary + ED.salary*0.1 as newSalary
+from Employees
+full join EmployeeDetails ED on ED.eid=Employees.eid
+full join Orders O on O.eid=ED.eid
+where ED.eid in (select Orders.eid
+				from Orders
+				where (select distinct count(O.eid)
+			    		from Orders O
+						full join TeaOrders on TeaOrders.oid=O.oid
+						full join Clients on O.cid=Clients.cid
+						where year(TeaOrders.orderingDate)=2022 and O.eid=Orders.eid) >= 1
+						group by Orders.eid
+						having count(Orders.cid)=2 ) 
+
 
 --f. 2 queries with the EXISTS operator and a subquery in the WHERE clause;
 
@@ -342,6 +380,15 @@ where Teas.price=(select max(price)
 --h. 4 queries with the GROUP BY clause, 3 of which also contain the HAVING clause; 
 --2 of the latter will also have a subquery in the HAVING clause; 
 --use the aggregation operators: COUNT, SUM, AVG, MIN, MAX;
+
+--COUNT, MAX
+--show the client with the most orders so far
+--select top 1 Clients.name, 
+--from Clients
+--full join Orders on Clients.cid=Orders.cid
+--where (select count(Orders.cid), Clients.name 
+--		from Clients, Orders
+--		where Clients.cid=Orders.cid) = max()
 
 --i. 4 queries using ANY and ALL to introduce a subquery in the WHERE clause (2 queries per operator); 
 --rewrite 2 of them with aggregation operators, and the other 2 with IN / [NOT] IN.
