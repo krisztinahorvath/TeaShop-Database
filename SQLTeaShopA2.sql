@@ -364,16 +364,17 @@ full join EmployeeDetails ED on ED.eid=Employees.eid
 full join Orders O on O.eid=ED.eid
 where ED.eid in (select Orders.eid
 				from Orders
-				where (select distinct count(O.eid)
+				where (select count(O.eid)
 			    		from Orders O
 						full join TeaOrders on TeaOrders.oid=O.oid
 						full join Clients on O.cid=Clients.cid
 						where year(TeaOrders.orderingDate)=2022 and O.eid=Orders.eid) >= 1
-						group by Orders.eid
-						having count(Orders.cid)=2 ) 
+				group by Orders.eid
+				having count(Orders.cid)=2 ) 
 
 
 --f. 2 queries with the EXISTS operator and a subquery in the WHERE clause;
+
 
 --g. 2 queries with a subquery in the FROM clause;                         
 
