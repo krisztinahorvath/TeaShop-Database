@@ -384,7 +384,7 @@ where not exists (select *
 				 where Teas.tid = TeaOrders.tid) 
 
 
---show all the distributors that have teas ordered this year
+--show all the distributors that have distributed teas ordered this year
 select D.did, D.name
 from Distributors D
 where exists(select *
@@ -394,6 +394,27 @@ where exists(select *
 
 
 --g. 2 queries with a subquery in the FROM clause; 
+
+--show the top 3 most ordered teas so far 
+select top 3 t.nrOfOrders, t.name
+from (select count(TeaOrders.tid) as nrOfOrders, Teas.name
+      from Teas
+	  full join TeaOrders on TeaOrders.tid=Teas.tid
+	  
+	  group by Teas.name
+	  having count(TeaOrders.tid) > 0)t
+order by t.nrOfOrders desc
+
+--show the client ids that have ordered this year and the number of orders they had
+
+select count(t.cid) as nrOfOrders, t.cid
+from (select distinct TeaOrders.oid, Clients.cid
+      from Teas, TeaOrders
+      full join Orders on Orders.oid=TeaOrders.oid
+      full join Clients on Orders.cid=Clients.cid
+      where Teas.tid=TeaOrders.tid and year(TeaOrders.orderingDate)=2022)t
+group by T.cid
+having count(t.cid)>0
 
 
 --h. 4 queries with the GROUP BY clause, 3 of which also contain the HAVING clause; 
