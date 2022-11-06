@@ -421,6 +421,18 @@ having count(t.cid)>0
 --2 of the latter will also have a subquery in the HAVING clause; 
 --use the aggregation operators: COUNT, SUM, AVG, MIN, MAX;
 
+--compute the average price of an order(distinct cause we gotta look at the distinct orders and 
+--use sum to compute the price of one single order with multiple teas) ?? group by??
+
+--compute the average quantity of an order of a certain tea-> mango avg(2)-avg of quantity ...
+
+--show the client ids that have ordered this year and the number of orders they had(from f.))
+--and show the client with the maximum orders and 
+--give them a special 25% discount for their next order on one of the teas they have ordered(we use the tea with the min price)
+
+--
+
+
 --COUNT, MAX
 --show the client with the most orders so far
 --select top 1 Clients.name, 
