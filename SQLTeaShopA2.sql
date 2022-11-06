@@ -375,8 +375,26 @@ where ED.eid in (select Orders.eid
 
 --f. 2 queries with the EXISTS operator and a subquery in the WHERE clause;
 
+--show the teas that are in stock but haven't been ordered yet by anyone 
+--and show their price with a 20% discount because of the lack of buyers
+select Teas.name, Teas.price - Teas.price*0.2 as discountPrice
+from Teas
+where not exists (select * 
+				 from TeaOrders
+				 where Teas.tid = TeaOrders.tid) 
 
---g. 2 queries with a subquery in the FROM clause;                         
+
+--show all the distributors that have teas ordered this year
+select D.did, D.name
+from Distributors D
+where exists(select *
+			 from Teas
+			 full join TeaOrders on TeaOrders.tid=Teas.tid
+			 where Teas.did=D.did and year(TeaOrders.orderingDate)=2022)
+
+
+--g. 2 queries with a subquery in the FROM clause; 
+
 
 --h. 4 queries with the GROUP BY clause, 3 of which also contain the HAVING clause; 
 --2 of the latter will also have a subquery in the HAVING clause; 
