@@ -445,8 +445,30 @@ having max(T.price) = (select max(t.total_price) as mx_ord
 					where O.oid = TeaOrders.oid and year(TeaOrders.orderingDate) = year(T.orderingDate)
 					group by O.oid)t)
 
---show the tea with the minimum quantity in stock and 
+--show the job titles of the employees and the minimum salary of an employee from there
 
+-- DOESNT WORK SAME MIN SALARY FOR ALL DEPARTAMENTS
+select min(EmployeeDetails.salary) as min_salary, Employees.jobTitle
+from Employees, EmployeeDetails 
+group by Employees.jobTitle
+having min(EmployeeDetails.salary) = (select min(t.min_sal)
+									  from (select E.jobTitle, min(ED.salary)  as min_sal
+									  from EmployeeDetails ED, Employees E
+                                      where ED.eid = E.eid
+                                      group by E.jobTitle
+                                      having min(ED.salary) > 0)t)		
+											
+--TODO THIS SOLVES THE PROBLEM BUT THEN NO SUBQUERY IN HAVING
+--and display the monthly pay for each department
+select E.jobTitle, min(ED.salary) as min_sal, sum(ED.salary) as total_sal_dep
+from EmployeeDetails ED, Employees E
+where ED.eid = E.eid
+group by E.jobTitle
+having min(ED.salary) > 0 and sum(ED.salary) = (select sum(t.sal)
+										from (select sum(EmployeeDetails.salary) as sal, Employees.jobTitle
+										      from EmployeeDetails, Employees
+										      where EmployeeDetails.eid=Employees.eid and Employees.jobTitle = E.jobTitle
+											  group by Employees.jobTitle)t) 
 
 
 --i. 4 queries using ANY and ALL to introduce a subquery in the WHERE clause (2 queries per operator); 
