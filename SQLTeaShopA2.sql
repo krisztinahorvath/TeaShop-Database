@@ -406,7 +406,6 @@ from (select count(TeaOrders.tid) as nrOfOrders, Teas.name
 order by t.nrOfOrders desc
 
 --show the client ids that have ordered this year and the number of orders they had
-
 select count(t.cid) as nrOfOrders, t.cid
 from (select distinct TeaOrders.oid, Clients.cid
       from Teas, TeaOrders
@@ -421,8 +420,24 @@ having count(t.cid)>0
 --2 of the latter will also have a subquery in the HAVING clause; 
 --use the aggregation operators: COUNT, SUM, AVG, MIN, MAX;
 
---compute the average price of an order(distinct cause we gotta look at the distinct orders and 
---use sum to compute the price of one single order with multiple teas) ?? group by??
+--compute the average price of an order(make sure that orders with multiple items are 
+--seen as one single order when computing the average)
+select avg(t.total_price) as average_price
+from (select O.oid, sum(TeaOrders.price) as total_price
+	  from Orders O, TeaOrders
+      where O.oid = TeaOrders.oid
+      group by O.oid)t
+
+
+--show the clients that have placed at least two different orders and the number of orders they placed
+select Clients.cid, count(Orders.oid) as nr_of_orders
+from Orders, Clients
+where Clients.cid = Orders.cid
+group by Clients.cid
+having count(Orders.oid) >= 2
+
+--show the order with the maximum amount of items ordered and give it a 10% discount for it
+
 
 --compute the average quantity of an order of a certain tea-> mango avg(2)-avg of quantity ...
 
