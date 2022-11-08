@@ -446,19 +446,6 @@ having max(T.price) = (select max(t.total_price) as mx_ord
 					group by O.oid)t)
 
 --show the job titles of the employees and the minimum salary of an employee from there
-
--- DOESNT WORK SAME MIN SALARY FOR ALL DEPARTAMENTS
-select min(EmployeeDetails.salary) as min_salary, Employees.jobTitle
-from Employees, EmployeeDetails 
-group by Employees.jobTitle
-having min(EmployeeDetails.salary) = (select min(t.min_sal)
-									  from (select E.jobTitle, min(ED.salary)  as min_sal
-									  from EmployeeDetails ED, Employees E
-                                      where ED.eid = E.eid
-                                      group by E.jobTitle
-                                      having min(ED.salary) > 0)t)		
-											
---TODO THIS SOLVES THE PROBLEM BUT THEN NO SUBQUERY IN HAVING
 --and display the monthly pay for each department
 select E.jobTitle, min(ED.salary) as min_sal, sum(ED.salary) as total_sal_dep
 from EmployeeDetails ED, Employees E
@@ -473,3 +460,58 @@ having min(ED.salary) > 0 and sum(ED.salary) = (select sum(t.sal)
 
 --i. 4 queries using ANY and ALL to introduce a subquery in the WHERE clause (2 queries per operator); 
 --rewrite 2 of them with aggregation operators, and the other 2 with IN / [NOT] IN.
+
+
+--show the top 3 cheapest teas that have been ordered before and increase their price by 10% due to their popularity
+select top 3 T.name, T.price + T.price*0.1 as new_price
+from Teas T
+where T.tid = ANY (select TeaOrders.tid
+				   from TeaOrders)
+order by T.price
+
+--rewritten with IN
+select top 3 T.name, T.price + T.price*0.1 as new_price
+from Teas T
+where T.tid in (select TeaOrders.tid
+		        from TeaOrders, Teas )
+order by T.price
+
+
+--ANY -- aggr function
+--show the the tea from the most expensive order of it this year
+select distinct Teas.*
+from TeaOrders, Teas
+where TeaOrders.price >= ANY (select T.price
+							 from TeaOrders T
+							 where year(T.orderingDate)<2022)
+
+
+
+--show the cashier with the smallest salary and increase it by 15%
+select E.name, ED.salary as old_salary, ED.salary + ED.salary*0.15 new_salary
+from Employees E, EmployeeDetails ED
+where E.jobTitle='cashier' and E.eid=ED.eid and ED.salary <= ALL (select EmployeeDetails.salary
+					   from EmployeeDetails, Employees
+					   where EmployeeDetails.eid=Employees.eid and Employees.jobTitle='cashier')
+					   
+--rewritten with min
+select E.name, ED.salary as old_salary, ED.salary + ED.salary*0.15 new_salary
+from Employees E, EmployeeDetails ED
+where E.jobTitle='cashier' and E.eid=ED.eid and ED.salary <= (select min(EmployeeDetails.salary)
+					   from EmployeeDetails, Employees
+					   where EmployeeDetails.eid=Employees.eid and Employees.jobTitle='cashier')
+
+
+--show the teas that have a limited stock(<5) so that when we place our next orders at the distributors
+select T.tid, T.name, T.quantity
+from Teas T
+where T.tid<>ALL(select distinct Teas.tid
+					 from Teas, TeaOrders
+					 where Teas.quantity >= 5)
+
+--rewritten with NOT IN
+select T.tid, T.name, T.quantity
+from Teas T
+where T.tid not in (select distinct Teas.tid
+					 from Teas, TeaOrders
+					 where Teas.quantity >= 5)
