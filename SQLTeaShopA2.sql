@@ -428,7 +428,6 @@ from (select O.oid, sum(TeaOrders.price) as total_price
       where O.oid = TeaOrders.oid
       group by O.oid)t
 
-
 --show the clients that have placed at least two different orders and the number of orders they placed
 select Clients.cid, count(Orders.oid) as nr_of_orders
 from Orders, Clients
@@ -436,26 +435,19 @@ where Clients.cid = Orders.cid
 group by Clients.cid
 having count(Orders.oid) >= 2
 
---show the order with the maximum amount of items ordered and give it a 10% discount for it
+--show the maximum price of the orders in each year
+select max(T.price) as maximum_order, year(T.orderingDate) as year_
+from TeaOrders T
+group by year(T.orderingDate)
+having max(T.price) = (select max(t.total_price) as mx_ord
+				from (select O.oid, sum(TeaOrders.price) as total_price
+					 from Orders O, TeaOrders
+					where O.oid = TeaOrders.oid and year(TeaOrders.orderingDate) = year(T.orderingDate)
+					group by O.oid)t)
+
+--show the tea with the minimum quantity in stock and 
 
 
---compute the average quantity of an order of a certain tea-> mango avg(2)-avg of quantity ...
-
---show the client ids that have ordered this year and the number of orders they had(from f.))
---and show the client with the maximum orders and 
---give them a special 25% discount for their next order on one of the teas they have ordered(we use the tea with the min price)
-
---
-
-
---COUNT, MAX
---show the client with the most orders so far
---select top 1 Clients.name, 
---from Clients
---full join Orders on Clients.cid=Orders.cid
---where (select count(Orders.cid), Clients.name 
---		from Clients, Orders
---		where Clients.cid=Orders.cid) = max()
 
 --i. 4 queries using ANY and ALL to introduce a subquery in the WHERE clause (2 queries per operator); 
 --rewrite 2 of them with aggregation operators, and the other 2 with IN / [NOT] IN.
