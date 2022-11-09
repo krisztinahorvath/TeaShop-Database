@@ -477,14 +477,19 @@ where T.tid in (select TeaOrders.tid
 order by T.price
 
 
---ANY -- aggr function
---show the the tea from the most expensive order of it this year
-select distinct Teas.*
-from TeaOrders, Teas
-where TeaOrders.price >= ANY (select T.price
-							 from TeaOrders T
-							 where year(T.orderingDate)<2022)
+--show the the top 5 orders that are more expensive than the cheapest order
+select top 5 TeaOrders.*
+from TeaOrders
+where TeaOrders.price > ANY (select T.price
+							 from TeaOrders T)
+order by TeaOrders.price desc
 
+--rewritten with MIN
+select top 5 TeaOrders.*
+from TeaOrders
+where TeaOrders.price > (select min(T.price)
+							 from TeaOrders T)
+order by TeaOrders.price desc
 
 
 --show the cashier with the smallest salary and increase it by 15%
