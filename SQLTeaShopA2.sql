@@ -233,6 +233,7 @@ select * from Employees
 --show all the emails of the clients and employees in the database to send them a happy holiday email
 select email
 from Clients
+where Clients.name like '%a' or Clients.name like '%b'
 union 
 select email
 from EmployeeDetails
@@ -323,8 +324,8 @@ where Employees.jobTitle='cashier' and Allergens.name='milk'
 --RIGHT JOIN
 --show all the different types that the teas in the current stock have and the maximum price of the teas that have it
 select distinct TeaTypes.name, Teas.price
-from TeaTypes
-right join Teas on Teas.ttid=TeaTypes.ttid
+from Teas
+right join TeaTypes on Teas.ttid=TeaTypes.ttid
 where Teas.price=(select max(price) 
 					from Teas
 					where Teas.ttid=TeaTypes.ttid)
@@ -333,8 +334,8 @@ where Teas.price=(select max(price)
 --show 3 clients with the most expensive orders and their price
 select top 3 Clients.name, TeaOrders.price 
 from Clients
-right join Orders on Clients.cid=Orders.cid
-right join TeaOrders on TeaOrders.oid=Orders.oid
+full join Orders on Clients.cid=Orders.cid
+full join TeaOrders on TeaOrders.oid=Orders.oid
 order by TeaOrders.price desc
 
 
