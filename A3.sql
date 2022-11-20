@@ -2,9 +2,9 @@ use TeaShop
 
 --a. modify the type of a column;
 go 
-create or alter procedure setSalaryFromEmployeeDetailsDecimal
+create or alter procedure setSalaryFromEmployeeDetailsMoney
 as
-	alter table EmployeeDetails alter column salary decimal(4,2)
+	alter table EmployeeDetails alter column salary money
 
 
 go 
@@ -21,7 +21,8 @@ as
 	alter table EmployeeDetails add phone_number varchar(20)
 
 
-go create or alter procedure removePhoneNumberFromEmployeeDetails
+go 
+create or alter procedure removePhoneNumberFromEmployeeDetails
 as 
 	alter table EmployeeDetails drop column phone_number
 
@@ -89,7 +90,7 @@ as
 
 --g. create / drop a table.
 go
-create or alter procedure addGiftCard
+create or alter procedure addGiftCardTable
 as 
 	create table GiftCard(
 			gcid int primary key,
@@ -99,7 +100,7 @@ as
 	)
 
 go
-create or alter procedure removeGiftCard
+create or alter procedure removeGiftCardTable
 as 
 	drop table GiftCard
 
@@ -112,6 +113,9 @@ go
 create table versionTable (
 	version int
 )
+
+select * from versionTable
+
 
 insert into versionTable
 values 
@@ -126,23 +130,25 @@ create table proceduresTable (
 	primary key (initial_version, final_version)
 )
 
+
 insert into proceduresTable
 values
-	(1, 2, 'setSalaryFromEmployeeDetailsDecimal'),
+	(1, 2, 'setSalaryFromEmployeeDetailsMoney'),
 	(2, 1, 'setSalaryFromEmployeeDetailsInt'),
 	(2, 3, 'addPhoneNumberToEmployeeDetails'),
 	(3, 2, 'removePhoneNumberFromEmployeeDetails'),
 	(3, 4, 'addDefaultToPriceFromTeas'),
 	(4, 3, 'removeDefaultFromPriceFromTeas'),
-	(4, 5, 'addEmailPKEmployeeDetails'),
-	(5, 4, 'removeEmailPKEmployeeDetails'),
-	(5, 6, 'newCandidateKeyTeas'),
-	(6, 5, 'removeCandidateKeyTeas'),
-	(6, 7, 'newForeignKeyGiftCard'),
-	(7, 6, 'removeForeignKeyGiftCard'),
-	(7, 8, 'addGiftCard'),
-	(8, 7, 'removeGiftCard')
-
+	(4, 5, 'addGiftCardTable'),
+	(5, 4, 'removeGiftCardTable'),
+	(5, 6, 'addEmailPKEmployeeDetails'),
+	(6, 5, 'removeEmailPKEmployeeDetails'),
+	(6, 7, 'newCandidateKeyTeas'),
+	(7, 6, 'removeCandidateKeyTeas'),
+	(7, 8, 'newForeignKeyGiftCard'),
+	(8, 7, 'removeForeignKeyGiftCard')
+	
+	
 
 
 --Write a stored procedure that receives as a parameter a version number
@@ -163,35 +169,40 @@ as
 			print('The database is already in this version');
 		else
 		begin
-			if @currentVersion > @newVersion
+			
+			while @currentVersion > @newVersion
 			begin
-				while @currentVersion > @newVersion
-				begin
-					select @procedureName = procedure_name from proceduresTable where initial_version = @currentVersion AND final_version = @currentVersion-1
-					print('executing' + @procedureName);
-					exec (@procedureName)
-					set @currentVersion = @currentVersion - 1
-				end
+				select @procedureName = procedure_name 
+				from proceduresTable
+				where initial_version = @currentVersion AND final_version = @currentVersion-1
+				
+				print('executing ' + @procedureName);
+				exec (@procedureName)
+				set @currentVersion = @currentVersion - 1
 			end
 
-			if @currentVersion < @newVersion
+			
+			while @currentVersion < @newVersion
 			begin
-				while @currentVersion < @newVersion
-				begin
-					select @procedureName =  procedure_name FROM proceduresTable WHERE initial_version = @currentVersion AND final_version = @currentVersion + 1
-					print('executing' + @procedureName);
-					exec (@procedureName)
-					set @currentVersion = @currentVersion + 1
-				end
+				select @procedureName =  procedure_name 
+				FROM proceduresTable 
+				WHERE initial_version = @currentVersion AND final_version = @currentVersion + 1
+				
+				print('executing ' + @procedureName);
+				exec (@procedureName)
+				set @currentVersion = @currentVersion + 1
 			end
+
 
 			update versionTable set version = @newVersion
 		end
 	end
 
 
-exec goToVersion 1
+
 
 select * from versionTable
 
 select * from proceduresTable
+
+exec goToVersion 1
