@@ -102,3 +102,42 @@ go
 create or alter procedure removeGiftCard
 as 
 	drop table GiftCard
+
+
+
+--Create a new table that holds the current version of the database schema. 
+--Simplifying assumption: the version is an integer number.
+
+create table versionTable (
+	version int
+)
+
+insert into versionTable
+values 
+	(1) -- initial version
+
+
+--procedures table with all the procedures and their inital/final version
+create table proceduresTable (
+	initial_version int, 
+	final_version int, 
+	procedure_name varchar(70),
+	primary key (initial_version, final_version)
+)
+
+insert into proceduresTable
+values
+	(1, 2, 'setSalaryFromEmployeeDetailsDecimal'),
+	(2, 1, 'setSalaryFromEmployeeDetailsInt'),
+	(2, 3, 'addPhoneNumberToEmployeeDetails'),
+	(3, 2, 'removePhoneNumberFromEmployeeDetails'),
+	(3, 4, 'addDefaultToPriceFromTeas'),
+	(4, 3, 'removeDefaultFromPriceFromTeas'),
+	(4, 5, 'addEmailPKEmployeeDetails'),
+	(5, 4, 'removeEmailPKEmployeeDetails'),
+	(5, 6, 'newCandidateKeyTeas'),
+	(6, 5, 'removeCandidateKeyTeas'),
+	(6, 7, 'newForeignKeyGiftCard'),
+	(7, 6, 'removeForeignKeyGiftCard'),
+	(7, 8, 'addGiftCard'),
+	(8, 7, 'removeGiftCard')
