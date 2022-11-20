@@ -108,6 +108,7 @@ as
 --Create a new table that holds the current version of the database schema. 
 --Simplifying assumption: the version is an integer number.
 
+go
 create table versionTable (
 	version int
 )
@@ -141,3 +142,56 @@ values
 	(7, 6, 'removeForeignKeyGiftCard'),
 	(7, 8, 'addGiftCard'),
 	(8, 7, 'removeGiftCard')
+
+
+
+--Write a stored procedure that receives as a parameter a version number
+--and brings the database to that version.
+go 
+create or alter procedure goToVersion(@newVersion int)
+as
+	declare @currentVersion int
+	declare @procedureName varchar(70)
+	select @currentVersion = version from versionTable
+
+	if (@newVersion > (select max(final_version) from proceduresTable) or @newVersion < 1)
+		RAISERROR ('incorrect version', 10, 1)
+
+	else 
+	begin
+		if @newVersion = @currentVersion
+			print('The database is already in this version');
+		else
+		begin
+			if @currentVersion > @newVersion
+			begin
+				while @currentVersion > @newVersion
+				begin
+					select @procedureName = procedure_name from proceduresTable where initial_version = @currentVersion AND final_version = @currentVersion-1
+					print('executing' + @procedureName);
+					exec (@procedureName)
+					set @currentVersion = @currentVersion - 1
+				end
+			end
+
+			if @currentVersion < @newVersion
+			begin
+				while @currentVersion < @newVersion
+				begin
+					select @procedureName =  procedure_name FROM proceduresTable WHERE initial_version = @currentVersion AND final_version = @currentVersion + 1
+					print('executing' + @procedureName);
+					exec (@procedureName)
+					set @currentVersion = @currentVersion + 1
+				end
+			end
+
+			update versionTable set version = @newVersion
+		end
+	end
+
+
+exec goToVersion 1
+
+select * from versionTable
+
+select * from proceduresTable
