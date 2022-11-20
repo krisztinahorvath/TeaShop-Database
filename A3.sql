@@ -1,4 +1,3 @@
-
 use TeaShop
 
 --a. modify the type of a column;
@@ -75,8 +74,18 @@ as
 		drop constraint teas_candidate_key
 
 --f. add / remove a foreign key;
---go
---create or alter procedure newForeignKey
+go
+create or alter procedure newForeignKeyGiftCard
+as 
+	alter table GiftCard
+		add constraint gift_card_foreign_key foreign key(cid) references Clients(cid)
+
+
+go 
+create or alter procedure removeForeignKeyGiftCard
+as
+	alter table GiftCard
+		drop constraint gift_card_foreign_key
 
 --g. create / drop a table.
 go
