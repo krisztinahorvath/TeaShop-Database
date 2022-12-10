@@ -72,7 +72,7 @@ go
 create or alter procedure deleteTeaOrders
 as
 begin
-	delete from TeaOrders where quantity < 0
+	delete from TeaOrders where quantity <= 0
 end
 go 
 
@@ -258,7 +258,7 @@ begin
 		set @viewName = (select Name from Views where ViewID = @viewID)
 
 		set @startAt = getdate()
-		print 'view name' + @viewName
+		print 'view name ' + @viewName
 		exec selectView @viewName
 		set @endAt = getdate()
 
@@ -279,16 +279,43 @@ begin
 end
 go
 
-delete from TestRunTables where TestRunID in (1, 2)
-delete from TestRuns where TestRunID in (1, 2)
+create or alter procedure runAllTests
+as 
+begin
+	declare @testName varchar(100)
+	declare @testID int
+	
+	declare allTestCursor cursor local
+	for 
+	select * from Tests
 
-exec mainTest 1
-exec mainTest 2
-exec mainTest 3
-exec mainTest 4
-exec mainTest 5
-exec mainTest 6
-exec mainTest 7
+	open allTestCursor
+	fetch allTestCursor into @testID, @testName
+
+	while @@FETCH_STATUS = 0
+	begin
+		print 'running ' + @testName
+		exec mainTest @testID
+		fetch next from allTestCursor into @testID, @testName 
+	end
+
+	close allTestCursor
+	deallocate allTestCursor
+end 
+go
+
+exec runAllTests
+
+--exec mainTest 1
+--exec mainTest 2
+--exec mainTest 3
+--exec mainTest 4
+--exec mainTest 5
+--exec mainTest 6
+--exec mainTest 7
+
+select * from TeaOrders
+delete from TeaOrders where quantity = 0
 
 
 select * from TestRunTables
