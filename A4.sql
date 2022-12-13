@@ -118,8 +118,6 @@ select * from Views
 
 insert into TestViews(TestID, ViewID) values (7, 1), (7, 2), (7, 3)
 
--- 6 linii, delete din TeaOrders, din Teas, TeaTypes
--- inserez in TeaTypes, Teas, TeaOrders
 insert into TestTables(TestID, TableID, NoOfRows, Position) 
 values 
 	(6, 3, 70, 1), --deleteTeaOrders
@@ -143,9 +141,6 @@ create or alter procedure mainTest
 @testID int
 as
 begin
-	print 'running test with id ' + convert(varchar, @testID)
-
-	insert into TestRuns values ((select Name from Tests where TestID=@testID), getdate(), getdate())
 	declare @testRunID int
 	set @testRunID = (select max(TestRunID) from TestRuns)
 
@@ -172,21 +167,24 @@ begin
 	from testDeleteCursor
 	into @tableID, @noOfRows
 
+	set @startAt = getdate()
+
+	update TestRuns
+	set StartAt = @startAt
+	where TestRunID = @testRunID and year(StartAt) = 2000
+
 	while @@FETCH_STATUS = 0
 	begin
 		set @tableName = (select Name from Tables where @tableID = TableID)
 
-		--exec delete_table @noOfRows, @tableName
-
 		declare @sql varchar(250) = 'delete from ' + @tableName
 		print @sql
 		
-		--declare @deleteName varchar(250) = (select Name from Tests where @testID = TestID)
 		declare @name varchar(100) = '%' + @tableName
 		declare @deleteName varchar(250) = (select Name from Tests where Name like 'delete%' and Name like @name)
 
 
-		exec(@deleteName) -- might not work bcs @testID ???? in tests??
+		exec(@deleteName) 
 
 		fetch next
 		from testDeleteCursor
@@ -216,7 +214,6 @@ begin
 		set @tableName = (select Name from Tables where TableID = @tableID)
 
 		set @startAt = getdate()
-		--exec insert_table @noOfRows, @tableName
 
 		print 'insert into ' + @tableName
 		
@@ -269,13 +266,12 @@ begin
 		into @viewID
 	end
 
-	close testViewCursor
-	deallocate testViewCursor
-
 	update TestRuns
-	set EndAt = getdate()
+	set EndAt = @endAt
 	where TestRunID = @testRunID
 
+	close testViewCursor
+	deallocate testViewCursor
 end
 go
 
@@ -284,7 +280,9 @@ as
 begin
 	declare @testName varchar(100)
 	declare @testID int
-	
+
+	print 'running test with id ' + convert(varchar, @testID)
+
 	declare allTestCursor cursor local
 	for 
 	select * from Tests
@@ -292,10 +290,17 @@ begin
 	open allTestCursor
 	fetch allTestCursor into @testID, @testName
 
+	
+	declare @id int = (select top 1 TestRunID from TestRuns order by TestRunID desc) + 1
+	declare @description varchar(100) = 'test' + convert(varchar, @id)
+
+	insert into TestRuns values (@description, '2000', '2000') -- TODO ___________________ startAt not good
 	while @@FETCH_STATUS = 0
 	begin
 		print 'running ' + @testName
+		
 		exec mainTest @testID
+
 		fetch next from allTestCursor into @testID, @testName 
 	end
 
@@ -305,6 +310,13 @@ end
 go
 
 exec runAllTests
+
+-- one of the view ----------------------
+
+select * from TestRunTables -- doar 3 linii pt inserturi
+select * from TestRunViews
+select * from TestRuns -- o singura linie/executie
+
 
 --exec mainTest 1
 --exec mainTest 2
@@ -316,8 +328,3 @@ exec runAllTests
 
 select * from TeaOrders
 delete from TeaOrders where quantity = 0
-
-
-select * from TestRunTables
-select * from TestRunViews
-select * from TestRuns
