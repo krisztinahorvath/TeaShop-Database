@@ -134,7 +134,6 @@ select * from TestViews
 create or alter procedure mainTest
 as
 begin
-	
 	insert into TestRuns values ('', '2000', '2000')
 
 	declare @testRunID int
@@ -231,7 +230,6 @@ begin
 	for 
 	select ViewID
 	from TestViews
-	--where @testID = TestID
 
 	open testViewCursor
 
