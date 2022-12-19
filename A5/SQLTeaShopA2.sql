@@ -1,7 +1,7 @@
 use TeaShop
 go
 
---insert data – for at least 4 tables; 
+--insert data â€“ for at least 4 tables; 
 --at least one statement must violate referential integrity constraints;
 
 insert into TeaTypes (
@@ -96,16 +96,17 @@ insert into Clients(
 	name, 
 	email,
 	address,
-	fidelityCardNo
+	fidelityCardNo, 
+	priorit
 )values
-	('Sherlock Holmes', 'sherlock.holmes@email.com', '750 Bartoletti Burgs, Apt. 038, Great Britain', 1234),
-	('Nicole Willis', 'nicole.willis@email.com', 'Larsplein 6, 2 hoog, Utrecht, Netherlands', 5678),
-	('Jason Simon', 'jason.simon@email.com', '56 Schuster Plaza, Suite 269, New York, United States', 7900),
-	('Melissa Bell', 'melissa.bell@email.com', '708 Casandra Mission, Apt. 800, Great Britain', 2345),
-	('Anthony Glover', 'anthony.glover@email.com', '3341 Wolff Shoals, Suite 737, Great Britain', 5990),
-	('Donna Gonzalez', 'donna.gonzalez@email.com', '3574 Hayes Common, Kansas, United States', 8012),
-	('Barbara Brown', 'barbara.brown@email.com', '926 Kaden Mission, Apt. 921, Colorado, United States', 3456),
-	('Dorothy Lee', 'dorothy.lee@email.com', '55182 Runolfsson Mission, Apt. 843, Utah, United States', 9876)
+	('Sherlock Holmes', 'sherlock.holmes@email.com', '750 Bartoletti Burgs, Apt. 038, Great Britain', 1234, 3),
+	('Nicole Willis', 'nicole.willis@email.com', 'Larsplein 6, 2 hoog, Utrecht, Netherlands', 5678, 2),
+	('Jason Simon', 'jason.simon@email.com', '56 Schuster Plaza, Suite 269, New York, United States', 7900, 1),
+	('Melissa Bell', 'melissa.bell@email.com', '708 Casandra Mission, Apt. 800, Great Britain', 2345, 3),
+	('Anthony Glover', 'anthony.glover@email.com', '3341 Wolff Shoals, Suite 737, Great Britain', 5990, 4),
+	('Donna Gonzalez', 'donna.gonzalez@email.com', '3574 Hayes Common, Kansas, United States', 8012, 7),
+	('Barbara Brown', 'barbara.brown@email.com', '926 Kaden Mission, Apt. 921, Colorado, United States', 3456, 1),
+	('Dorothy Lee', 'dorothy.lee@email.com', '55182 Runolfsson Mission, Apt. 843, Utah, United States', 9876, 3)
 
 
 
@@ -176,7 +177,7 @@ insert into TeaOrders(
 
 
 
---update data – for at least 3 tables;
+--update data â€“ for at least 3 tables;
 
 
 --increases the salary with 100 of all employees that have a salary >=4500
@@ -206,7 +207,7 @@ select * from TeaOrders
 
 
 
---delete data – for at least 2 tables
+--delete data â€“ for at least 2 tables
 
 --delete all the orders that are older than a year and have the total greater than 10
 select * from TeaOrders
