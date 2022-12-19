@@ -52,6 +52,9 @@ go
 
 select * from myView
 
+create nonclustered index Clients_index on Clients(priorit)
+drop index Clients_index on Clients
+
 create nonclustered index Orders_index on Orders(cid, eid)
 drop index Orders_index on Orders
 
