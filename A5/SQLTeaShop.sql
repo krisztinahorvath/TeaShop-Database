@@ -38,6 +38,7 @@ create table AllergTeas (
 create table Clients (
 	cid int primary key identity,
 	fidelityCardNo int unique,
+	priorit int, 
 	name varchar(40) not null,
 	email varchar(40) not null,
 	address varchar(60) not null
