@@ -2,30 +2,6 @@ use TeaShop
 go
 
 
--- create table Clients (
---	cid int primary key identity,
---	fidelityCardNo int unique,
---	name varchar(40) not null,
---	email varchar(40) not null,
---	address varchar(60) not null
---)
-
---create table Employees (
---	eid int primary key identity,
---	points int,
---	name varchar(40) not null,
---	jobTitle varchar(40) not null
---)
-
---create table EmployeeDetails (
---	eid int foreign key references Employees(eid) on delete cascade on update cascade not null,
---	email varchar(40) not null,
---	salary float not null,
---	address varchar(60),
---	hiringDate date not null,
---	constraint pk_EmployeeDetails primary key(eid)
---)
-
 -- a. Write queries on Ta such that their execution plans contain the following operators:
 
 -- clustered index scan - entire table
@@ -64,3 +40,18 @@ drop index Employees_points_index on Employees
 
 -- c. Create a view that joins at least 2 tables. Check whether existing indexes are helpful; 
 -- if not, reassess existing indexes / examine the cardinality of the tables.
+
+create or alter view myView 
+as 
+	select C.fidelityCardNo, E.points, O.oid
+	from Orders O
+	inner join Clients C on C.cid = O.cid
+	inner join Employees E on E.eid = O.oid
+	where E.points > 5 and C.fidelityCardNo < 7000
+go
+
+select * from myView
+
+create nonclustered index Orders_index on Orders(cid, eid)
+drop index Orders_index on Orders
+
